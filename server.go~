@@ -1,0 +1,95 @@
+package main
+
+import (
+	"fmt"
+
+	"log"
+	"net/http"
+
+
+
+
+
+
+	"gopkg.in/mgo.v2"
+
+
+
+)
+
+type Person struct {
+		Name  string
+		Surname string
+	}
+	
+
+func welcomePage(w http.ResponseWriter, r *http.Request) {
+	//r.ParseForm() //Parse url parameters passed, then parse the response packet for the POST body (request body)
+	// attention: If you do not call ParseForm method, the following data can not be obtained form
+	/*fmt.Println(r.Form) // print information on server side.
+	fmt.Println("path", r.URL.Path)
+	fmt.Println("scheme", r.URL.Scheme)
+	fmt.Println(r.Form["url_long"])
+	for k, v := range r.Form {
+		fmt.Println("key:", k)
+		fmt.Println("val:", strings.Join(v, ""))
+	}*/
+	fmt.Fprintf(w, "Hello Loris, this is you first Golang project!!") // write data to response
+}
+
+
+
+func insert_product(w http.ResponseWriter, r *http.Request) {
+	/*fmt.Println("method:", r.Method) //get request method
+	if r.Method == "GET" {
+		t, _ := template.ParseFiles("login.gtpl")
+		t.Execute(w, nil)
+		fmt.Println("error")
+
+	} else {
+		r.ParseForm()
+		// logic part of log in
+		if err := authUser(r.Form["username"][0], r.Form["password"][0]); err != nil {
+		  fmt.Fprintf(w, "Not Authenticated: %s", err)
+		  return
+		}
+		fmt.Fprintf(w, "Authenticated")*/
+
+
+
+		session, err := mgo.Dial("localhost")
+		if err != nil {
+			panic(err)
+		}
+		defer session.Close()
+
+		// Optional. Switch the session to a monotonic behavior.
+		session.SetMode(mgo.Monotonic, true)
+
+		c := session.DB("users").C("info")
+		err = c.Insert(&Person{"Loris", "Marcellini"})
+		if err != nil {
+			log.Fatal(err)
+		}
+		// redirects to home page after having inserted a new user in mongodb
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		
+		/*result := Person{}
+		err = c.Find(bson.M{"name": "Loris"}).One(&result)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		fmt.Println("Phone:", result.Phone)*/
+}
+
+func main() {
+	http.HandleFunc("/", welcomePage) // setting router rule
+	http.HandleFunc("/insert_product", insert_product)
+
+	err := http.ListenAndServe(":10000", nil) // setting listening port
+	if err != nil {
+		log.Fatal("ListenAndServe: ", err)
+	}
+}
+
