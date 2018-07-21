@@ -5,11 +5,6 @@ import (
 	"log"
 	"net/http"
 )
-
-type Person struct {
-		Name  string
-		Surname string
-	}
 	
 
 func welcomePage(w http.ResponseWriter, r *http.Request) {
