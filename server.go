@@ -1,3 +1,5 @@
+// This is the first Golang code ever written.
+
 package main
 
 
