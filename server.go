@@ -18,7 +18,7 @@ func welcomePage(w http.ResponseWriter, r *http.Request) {
 func main() {
 	http.HandleFunc("/", welcomePage) // setting router rule
 
-	err := http.ListenAndServe(":10000", nil) // setting listening port
+	err := http.ListenAndServe(":8080", nil) // setting listening port
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
 	}
