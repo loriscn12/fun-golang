@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package db;
+
+// Interface exported by the server.
+service Database {
+  rpc Test(TestRequest) returns (TestResponse) {}
+}
+
+message TestRequest {
+  string test =1;
+}
+
+message TestResponse {
+    string test =1;
+}
