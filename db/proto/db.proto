@@ -4,13 +4,14 @@ package db;
 
 // Interface exported by the server.
 service Database {
-  rpc Test(TestRequest) returns (TestResponse) {}
+  rpc AddUser(AddUserRequest) returns (AddUserResponse) {}
 }
 
-message TestRequest {
-  string test =1;
+message AddUserRequest {
+  string name = 1;
+  string surname = 2;
 }
 
-message TestResponse {
-    string test =1;
+message AddUserResponse {
+    string id =1;
 }
