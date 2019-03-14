@@ -10,4 +10,4 @@ loriscn12@
 
 ## Disclamer
 
-This project is for accademic purposes only. None of the content is to be used for commercial (profitable) use.
+This project is intendend for accademic purposes only. None of the content is intended for commercial (profitable) use.
