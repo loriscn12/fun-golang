@@ -29,7 +29,7 @@ func main() {
 	// Looking for a valid feature
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
     defer cancel()
-	resp, err := client.Test(ctx, &dpb.TestRequest{Test: "test"})
+	resp, err := client.AddUser(ctx, &dpb.AddUserRequest{Name: "loris", Surname: "marcellini"})
 	if err != nil {
 		log.Fatalf("error: %s", err)
 	}
