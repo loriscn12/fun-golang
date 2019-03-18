@@ -4,8 +4,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
-	"go.mongodb.org/mongo-driver/mongo/options"
-	"go.mongodb.org/mongo-driver/mongo"
+	"golang-project/db/mongo"
 		
 	"log"
 	"context"
@@ -14,20 +13,16 @@ import (
 )
 
 type DBService struct {
-	Client *mongo.Client
+	Client mongo.Client
 }
 
 type Config struct {
-	MongoAddress string
+	MongoClient mongo.Client
 }
 
 // New returns a new DBService client.
 func New(ctx context.Context, config *Config)(*DBService, error){
-	client, err := mongo.Connect(ctx, options.Client().ApplyURI(config.MongoAddress))
-	if err != nil {
-		return &DBService{}, err
-	}
-	return &DBService{Client: client}, nil
+	return &DBService{Client: config.MongoClient}, nil
 }
 
 // Close closes the DBService connection with the client.
