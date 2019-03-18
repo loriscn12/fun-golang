@@ -10,6 +10,7 @@ import (
 	"context"
 	"flag"
 	"golang-project/db/service"
+	mgo "golang-project/db/mongo"
 
 	dpb "golang-project/db/proto"
 )
@@ -27,12 +28,18 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
-	dbServer, err := service.New(ctx, &service.Config{MongoAddress: *mongoAddr})
+	client, err := mgo.New(ctx, *mongoAddr)
+	if err != nil {
+		log.Fatalf("failed to instanciate a new MongoDB client: %s", err)
+	}
+	dbServer, err := service.New(ctx, &service.Config{MongoClient: client})
 	if err != nil {
 		log.Fatalf("failed to instanciate a new DBService client: %s", err)
 	}
 	defer dbServer.Close(ctx)
 	grpcServer := grpc.NewServer()
+
+	// TODO(loris): add MongoDB as a critical dependency for the gRPC server.
 	dpb.RegisterDatabaseServer(grpcServer, dbServer)
 	grpcServer.Serve(lis)
 }
