@@ -10,7 +10,7 @@ import (
 	"context"
 	"flag"
 	"golang-project/db/service"
-	mgo "golang-project/db/mongo"
+	"golang-project/db/mongo"
 
 	dpb "golang-project/db/proto"
 )
@@ -28,7 +28,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
-	client, err := mgo.New(ctx, *mongoAddr)
+	client, err := mongo.New(ctx, *mongoAddr)
 	if err != nil {
 		log.Fatalf("failed to instanciate a new MongoDB client: %s", err)
 	}
