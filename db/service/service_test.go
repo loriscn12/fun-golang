@@ -1,78 +1,85 @@
 package service
 
 import (
-	"google.golang.org/grpc"
-	"log"
-	"time"
-	"testing"
 	"context"
+	"protobuf-master/proto"
+	"testing"
+	"time"
 
+	"golang-project/db/mongodb"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
-	"google.golang.org/grpc/test/grpc_testing"
+
+	dpb "golang-project/db/proto"
 )
 
-type FakeMongo struct{}
+type fakeMongo struct{}
 
-func (f FakeMongo) Connect(ctx context.Context) error{
+func (f fakeMongo) Connect(ctx context.Context) error {
 	return nil
 }
 
-func (f FakeMongo) Disconnect(ctx context.Context) error{
+func (f fakeMongo) Disconnect(ctx context.Context) error {
 	return nil
 }
 
-func (f FakeMongo) Ping(ctx context.Context, rp *readpref.ReadPref) error{
+func (f fakeMongo) Ping(ctx context.Context, rp *readpref.ReadPref) error {
 	return nil
 }
 
-func (f FakeMongo) StartSession(opts ...*options.SessionOptions) (mongo.Session, error){
-	return nil, nil
+func (f fakeMongo) Database(name string, opts ...*options.DatabaseOptions) mongodb.Database {
+	return &fakeDatabase{}
 }
 
-func (f FakeMongo) Database(name string, opts ...*options.DatabaseOptions) *mongo.Database{
+type fakeDatabase struct{}
+
+func (f fakeDatabase) Client() mongodb.Client {
 	return nil
 }
 
-func (f FakeMongo) ListDatabases(ctx context.Context, filter interface{}, opts ...*options.ListDatabasesOptions) (mongo.ListDatabasesResult, error){
-	return mongo.ListDatabasesResult{}, nil
+func (f fakeDatabase) Collection(text string, opts ...*options.CollectionOptions) mongodb.Collection {
+	return &fakeCollection{}
 }
 
-func (f FakeMongo) ListDatabaseNames(ctx context.Context, filter interface{}, opts ...*options.ListDatabasesOptions) ([]string, error){
-	return []string{}, nil
-}
+type fakeCollection struct{}
 
-func (f FakeMongo) UseSession(ctx context.Context, fn func(mongo.SessionContext) error) error{
-	return nil
+func (f fakeCollection) InsertOne(context.Context, interface{}, ...*options.InsertOneOptions) (*mongo.InsertOneResult, error) {
+	var id primitive.ObjectID = [12]byte{1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1}
+	return &mongo.InsertOneResult{
+		InsertedID: id,
+	}, nil
 }
-
-func (f FakeMongo) UseSessionWithOptions(ctx context.Context, opts *options.SessionOptions, fn func(mongo.SessionContext) error) error{
-	return nil
-}
-
-func (f FakeMongo) Watch(ctx context.Context, pipeline interface{}, opts ...*options.ChangeStreamOptions) (*mongo.ChangeStream, error){
-	return &mongo.ChangeStream{}, nil
-}
-
 
 func TestAddUser(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel();
-	//lis, err := net.Listen("tcp", fmt.Sprintf(":%d", 10001))
+	defer cancel()
 
-	testMongo := &FakeMongo{}
-	fakeClient := testMongo.Connect(ctx)
-	dbServer, err := New(ctx, &Config{MongoClient: testMongo})
+	fakeDBServer, err := New(ctx, &Config{MongoClient: fakeMongo{}})
 	if err != nil {
-		log.Fatalf("failed to instanciate a new DBService client: %s", err)
+		t.Errorf("failed to start a fake MongoDB client")
 	}
-	defer dbServer.Close(ctx)
-	grpcServer := grpc.NewServer()
-	
-	grpc_testing.RegisterTestServiceServer(grpcServer, &DBService{})
-	//grpc_testing.Serve(lis)
 
-
-	//TODO(loris): Add test for AddUser function.
+	tests := []struct {
+		name string
+		want *dpb.AddUserResponse
+	}{
+		{
+			name: "Success",
+			want: &dpb.AddUserResponse{Id: "010203040506070809000100"},
+		},
+	}
+	for _, test := range tests {
+		req := &dpb.AddUserRequest{Name: "name", Surname: "surname"}
+		got, err := fakeDBServer.AddUser(ctx, req)
+		if err != nil {
+			t.Errorf("AddUser(%v) got unexpected error", test.name)
+		}
+		if !proto.Equal(test.want, got) {
+			t.Errorf("AddUser(%v)= got %v wanted %v", test.name, got, test.want)
+		}
+	}
 }
