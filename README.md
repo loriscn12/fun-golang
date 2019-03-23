@@ -2,7 +2,7 @@
 
 ## What is it?
 
-Playground for Go, gRPC and more...
+Playground for Go, Python, gRPC and more...
 
 ## Devs
 
@@ -10,4 +10,4 @@ loriscn12@
 
 ## Disclamer
 
-This project is intendend for accademic purposes only. None of the content is intended for commercial (profitable) use.
+This project is intendend for accademic purposes only.
