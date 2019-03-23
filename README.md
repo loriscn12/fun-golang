@@ -2,7 +2,7 @@
 
 ## What is it?
 
-Playground for Go, Python, gRPC and more...
+Playground for Go, gRPC and more...
 
 ## Devs
 
