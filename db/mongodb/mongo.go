@@ -25,6 +25,7 @@ type Database interface {
 // Collection satisfies the mongo.Collection interface.
 type Collection interface {
 	InsertOne(ctx context.Context, document interface{}, opts ...*options.InsertOneOptions) (*mongo.InsertOneResult, error)
+	Database() Database
 }
 
 func New(ctx context.Context, mongoAddress string) (*mongo.Client, error) {
