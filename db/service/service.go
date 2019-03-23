@@ -16,10 +16,15 @@ import (
 	dpb "golang-project/db/proto"
 )
 
+// For testing purposes.
+var logFatalf = log.Fatalf
+
+// DBService is the service's client.
 type DBService struct {
 	Client mongodb.Client
 }
 
+// Config contains config parameters for instantiating a new DBService.
 type Config struct {
 	MongoClient mongodb.Client
 }
@@ -32,7 +37,7 @@ func New(ctx context.Context, config *Config) (*DBService, error) {
 // Close closes the DBService connection with the client.
 func (s *DBService) Close(ctx context.Context) {
 	if err := s.Client.Disconnect(ctx); err != nil {
-		log.Fatalf("failed closing connection with the DBService client: %s", err)
+		logFatalf("failed closing connection with the DBService client: %s", err)
 	}
 }
 

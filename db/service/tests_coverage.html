@@ -54,7 +54,7 @@
 			<div id="nav">
 				<select id="files">
 				
-				<option value="file0">golang-project/db/service/service.go (83.3%)</option>
+				<option value="file0">golang-project/db/service/service.go (100.0%)</option>
 				
 				</select>
 			</div>
@@ -86,10 +86,15 @@ import (
         dpb "golang-project/db/proto"
 )
 
+// For testing purposes.
+var logFatalf = log.Fatalf
+
+// DBService is the service's client.
 type DBService struct {
         Client mongodb.Client
 }
 
+// Config contains config parameters for instantiating a new DBService.
 type Config struct {
         MongoClient mongodb.Client
 }
@@ -100,9 +105,9 @@ func New(ctx context.Context, config *Config) (*DBService, error) <span class="c
 }</span>
 
 // Close closes the DBService connection with the client.
-func (s *DBService) Close(ctx context.Context) <span class="cov0" title="0">{
-        if err := s.Client.Disconnect(ctx); err != nil </span><span class="cov0" title="0">{
-                log.Fatalf("failed closing connection with the DBService client: %s", err)
+func (s *DBService) Close(ctx context.Context) <span class="cov8" title="1">{
+        if err := s.Client.Disconnect(ctx); err != nil </span><span class="cov8" title="1">{
+                logFatalf("failed closing connection with the DBService client: %s", err)
         }</span>
 }
 
