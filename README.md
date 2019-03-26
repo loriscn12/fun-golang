@@ -1,7 +1,6 @@
 # Golang Project
 
-.. image:: hhttps://codecov.io/gh/loriscn12/golang-project/branch/master/graph/badge.svg
-    :target: https://codecov.io/gh/loriscn12/golang-project
+[![codecov](https://codecov.io/gh/loriscn12/golang-project/branch/master/graph/badge.svg)](https://codecov.io/gh/loriscn12/golang-project)
 
 ## What is it?
 
