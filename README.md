@@ -1,5 +1,8 @@
 # Golang Project
 
+.. image:: hhttps://codecov.io/gh/loriscn12/golang-project/branch/master/graph/badge.svg
+    :target: https://codecov.io/gh/loriscn12/golang-project
+
 ## What is it?
 
 Playground for Go, gRPC and more...
