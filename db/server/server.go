@@ -2,33 +2,33 @@ package main
 
 import (
 	"google.golang.org/grpc"
-	
-	"log"
-	"fmt"
-	"net"
-	"time"
+
 	"context"
 	"flag"
+	"fmt"
+	"golang-project/db/mongodb"
 	"golang-project/db/service"
-	"golang-project/db/mongo"
+	"log"
+	"net"
+	"time"
 
 	dpb "golang-project/db/proto"
 )
 
 var (
-	port = flag.Int("port", 10000, "The server port")
+	port      = flag.Int("port", 10000, "The server port")
 	mongoAddr = flag.String("mongoAddress", "mongodb://localhost:27017", "The address of the MongoDB")
 )
 
 func main() {
 	flag.Parse()
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel();
+	defer cancel()
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
-	client, err := mongo.New(ctx, *mongoAddr)
+	client, err := mongodb.New(ctx, *mongoAddr)
 	if err != nil {
 		log.Fatalf("failed to instanciate a new MongoDB client: %s", err)
 	}

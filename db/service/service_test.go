@@ -22,8 +22,6 @@ import (
 )
 
 type fakeMongo struct {
-	mongodb.Client
-	client        mongodb.Client
 	pingErr       bool
 	insertErr     bool
 	disconnectErr bool
@@ -48,30 +46,22 @@ func (f fakeMongo) Ping(ctx context.Context, rp *readpref.ReadPref) error {
 }
 
 func (f fakeMongo) Database(name string, opts ...*options.DatabaseOptions) mongodb.Database {
-	return &fakeDatabase{
-		client: f,
-	}
+	return &fakeDatabase{client: f}
 }
 
 type fakeDatabase struct {
-	mongodb.Database
 	client fakeMongo
 }
 
 func (f fakeDatabase) Client() mongodb.Client {
-	return &fakeMongo{
-		client: f.client,
-	}
+	return &fakeMongo{}
 }
 
 func (f fakeDatabase) Collection(text string, opts ...*options.CollectionOptions) mongodb.Collection {
-	return &fakeCollection{
-		client: f.client,
-	}
+	return &fakeCollection{client: f.client}
 }
 
 type fakeCollection struct {
-	mongodb.Collection
 	client fakeMongo
 }
 
