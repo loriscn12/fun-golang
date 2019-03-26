@@ -8,6 +8,10 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 )
 
+type MongoClient struct {
+	*mongo.Client
+}
+
 // Client satisfies the mongo.Client interface.
 type Client interface {
 	Connect(ctx context.Context) error
@@ -16,10 +20,25 @@ type Client interface {
 	Database(name string, opts ...*options.DatabaseOptions) Database
 }
 
+func (c MongoClient) Database(name string, opts ...*options.DatabaseOptions) Database {
+	return &MongoDatabase{Database: c.Client.Database(name, opts...)}
+}
+
+type MongoDatabase struct {
+	*mongo.Database
+}
+
 // Database satisfies the mongo.Database interface.
 type Database interface {
-	Client() Client
 	Collection(name string, opts ...*options.CollectionOptions) Collection
+}
+
+func (d MongoDatabase) Collection(name string, opts ...*options.CollectionOptions) Collection {
+	return &MongoCollection{Collection: d.Database.Collection(name, opts...)}
+}
+
+type MongoCollection struct {
+	*mongo.Collection
 }
 
 // Collection satisfies the mongo.Collection interface.
@@ -28,10 +47,14 @@ type Collection interface {
 	Database() Database
 }
 
-func New(ctx context.Context, mongoAddress string) (*mongo.Client, error) {
+func (c MongoCollection) Database() Database {
+	return &MongoDatabase{Database: c.Collection.Database()}
+}
+
+func New(ctx context.Context, mongoAddress string) (Client, error) {
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(mongoAddress))
 	if err != nil {
 		return nil, err
 	}
-	return client, nil
+	return MongoClient{client}, nil
 }
