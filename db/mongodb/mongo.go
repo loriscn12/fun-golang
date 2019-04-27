@@ -3,6 +3,7 @@ package mongodb
 import (
 	"context"
 
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
@@ -44,11 +45,22 @@ type MongoCollection struct {
 // Collection satisfies the mongo.Collection interface.
 type Collection interface {
 	InsertOne(ctx context.Context, document interface{}, opts ...*options.InsertOneOptions) (*mongo.InsertOneResult, error)
+	FindOne(ctx context.Context, document interface{}, opts ...*options.FindOneOptions) SingleResult
 	Database() Database
 }
 
 func (c MongoCollection) Database() Database {
 	return &MongoDatabase{Database: c.Collection.Database()}
+}
+
+func (c MongoCollection) FindOne(ctx context.Context, document interface{}, opts ...*options.FindOneOptions) SingleResult {
+	return c.Collection.FindOne(ctx, document, opts...)
+}
+
+type SingleResult interface {
+	Decode(v interface{}) error
+	DecodeBytes() (bson.Raw, error)
+	Err() error
 }
 
 func New(ctx context.Context, mongoAddress string) (Client, error) {

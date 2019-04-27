@@ -16,8 +16,17 @@ import (
 	dpb "golang-project/db/proto"
 )
 
-// For testing purposes.
-var logFatalf = log.Fatalf
+var (
+	// Fatalf var for testing purposes.
+	logFatalf = log.Fatalf
+	db        = "db"
+	usersDB   = "users"
+)
+
+// singleResults will contain results from FindOne method calls.
+var singleResult struct {
+	Value float64
+}
 
 // DBService is the service's client.
 type DBService struct {
@@ -47,11 +56,27 @@ func (s *DBService) AddUser(ctx context.Context, req *dpb.AddUserRequest) (*dpb.
 	if err != nil {
 		return nil, status.Errorf(codes.FailedPrecondition, "failed to connect to MongoDB client: %s", err)
 	}
-	collection := s.Client.Database("db").Collection("users")
+	collection := s.Client.Database(db).Collection(usersDB)
 	res, err := collection.InsertOne(ctx, bson.M{"name": req.Name, "surname": req.Surname})
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to insert to MongoDB: %s", err)
 	}
 	insertedID := res.InsertedID.(primitive.ObjectID)
 	return &dpb.AddUserResponse{Id: insertedID.Hex()}, nil
+}
+
+// Test returns a test response.
+func (s *DBService) GetUser(ctx context.Context, req *dpb.GetUserRequest) (*dpb.GetUserResponse, error) {
+	err := s.Client.Ping(ctx, readpref.Primary())
+	if err != nil {
+		return nil, status.Errorf(codes.FailedPrecondition, "failed to connect to MongoDB client: %s", err)
+	}
+	collection := s.Client.Database(db).Collection(usersDB)
+	if err := collection.FindOne(ctx, bson.M{"name": req.Name, "surname": req.Surname}).Decode(&singleResult); err == nil {
+		return &dpb.GetUserResponse{
+			Name:    req.Name,
+			Surname: req.Surname,
+		}, nil
+	}
+	return &dpb.GetUserResponse{}, status.Errorf(codes.NotFound, "could not find user matching request: %v", req)
 }
