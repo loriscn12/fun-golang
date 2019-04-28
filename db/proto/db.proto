@@ -2,9 +2,14 @@ syntax = "proto3";
 
 package db;
 
-// Interface exported by the server.
-service Database {
-  rpc AddUser(AddUserRequest) returns (AddUserResponse) {}
+message GetUserRequest {
+  string name = 1;
+  string surname = 2;
+}
+
+message GetUserResponse {
+  string name = 1;
+  string surname = 2;
 }
 
 message AddUserRequest {
@@ -14,4 +19,9 @@ message AddUserRequest {
 
 message AddUserResponse {
     string id =1;
+}
+
+// Interface exported by the server.
+service Database {
+  rpc AddUser(AddUserRequest) returns (AddUserResponse) {}
 }
