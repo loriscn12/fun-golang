@@ -18,10 +18,18 @@ message AddUserRequest {
 }
 
 message AddUserResponse {
-    string id =1;
+  string id =1;
+}
+
+message ListTablesRequest{}
+
+message ListTablesResponse{
+  repeated string tables = 1;
 }
 
 // Interface exported by the server.
 service Database {
   rpc AddUser(AddUserRequest) returns (AddUserResponse) {}
+  rpc GetUser(GetUserRequest) returns (GetUserResponse) {}
+  rpc ListTables(ListTablesRequest) returns (ListTablesResponse) {}
 }
