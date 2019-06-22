@@ -8,6 +8,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
+	"go.mongodb.org/mongo-driver/x/bsonx"
 	"google.golang.org/grpc/status"
 
 	"context"
@@ -18,9 +19,15 @@ import (
 
 var (
 	// Fatalf var for testing purposes.
-	logFatalf = log.Fatalf
-	db        = "db"
-	usersDB   = "users"
+	logFatalf      = log.Fatalf
+	db             = "db"
+	usersDB        = "users"
+	reservationsDB = "reservations"
+	// dbMap maps record types (proto ENUMs) to table name in mongoDB.
+	dbMap = map[int]string{
+		1: usersDB,
+		2: reservationsDB,
+	}
 )
 
 // singleResults will contain results from FindOne method calls.
@@ -50,10 +57,9 @@ func (s *DBService) Close(ctx context.Context) {
 	}
 }
 
-// Test returns a test response.
+// AddUser returns a AddUser response.
 func (s *DBService) AddUser(ctx context.Context, req *dpb.AddUserRequest) (*dpb.AddUserResponse, error) {
-	err := s.Client.Ping(ctx, readpref.Primary())
-	if err != nil {
+	if err := s.Client.Ping(ctx, readpref.Primary()); err != nil {
 		return nil, status.Errorf(codes.FailedPrecondition, "failed to connect to MongoDB client: %s", err)
 	}
 	collection := s.Client.Database(db).Collection(usersDB)
@@ -65,10 +71,9 @@ func (s *DBService) AddUser(ctx context.Context, req *dpb.AddUserRequest) (*dpb.
 	return &dpb.AddUserResponse{Id: insertedID.Hex()}, nil
 }
 
-// Test returns a test response.
+// GetUser returns a GetUser response.
 func (s *DBService) GetUser(ctx context.Context, req *dpb.GetUserRequest) (*dpb.GetUserResponse, error) {
-	err := s.Client.Ping(ctx, readpref.Primary())
-	if err != nil {
+	if err := s.Client.Ping(ctx, readpref.Primary()); err != nil {
 		return nil, status.Errorf(codes.FailedPrecondition, "failed to connect to MongoDB client: %s", err)
 	}
 	collection := s.Client.Database(db).Collection(usersDB)
@@ -79,4 +84,15 @@ func (s *DBService) GetUser(ctx context.Context, req *dpb.GetUserRequest) (*dpb.
 		}, nil
 	}
 	return &dpb.GetUserResponse{}, status.Errorf(codes.NotFound, "could not find user matching request: %v", req)
+}
+
+// ListTables returns a ListTables response.
+func (s *DBService) ListTables(ctx context.Context, req *dpb.ListTablesRequest) (*dpb.ListTablesResponse, error) {
+	if err := s.Client.Ping(ctx, readpref.Primary()); err != nil {
+		return nil, status.Errorf(codes.FailedPrecondition, "failed to connect to MongoDB client: %s", err)
+	}
+	if tables, err := s.Client.Database(db).ListCollectionNames(ctx, bsonx.Doc{}); err == nil {
+		return &dpb.ListTablesResponse{Tables: tables}, err
+	}
+	return &dpb.ListTablesResponse{}, status.Errorf(codes.NotFound, "could not find tables")
 }

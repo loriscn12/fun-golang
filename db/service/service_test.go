@@ -22,10 +22,11 @@ import (
 )
 
 type fakeMongo struct {
-	pingErr       error
-	insertErr     error
-	disconnectErr error
-	findErr       error
+	pingErr            error
+	insertErr          error
+	disconnectErr      error
+	findErr            error
+	listCollectionsErr error
 }
 
 func (f fakeMongo) Connect(ctx context.Context) error {
@@ -54,6 +55,10 @@ func (f fakeDatabase) Client() mongodb.Client {
 
 func (f fakeDatabase) Collection(text string, opts ...*options.CollectionOptions) mongodb.Collection {
 	return &fakeCollection{client: f.client}
+}
+
+func (f fakeDatabase) ListCollectionNames(ctx context.Context, filter interface{}, opts ...*options.ListCollectionsOptions) ([]string, error) {
+	return []string{"table1", "table2"}, f.client.listCollectionsErr
 }
 
 type fakeCollection struct {
@@ -230,6 +235,60 @@ func TestGetUser(t *testing.T) {
 		mockedMongo.pingErr = test.pingErr
 		mockedMongo.findErr = test.findErr
 		got, err := fakeDBServer.GetUser(ctx, req)
+		gotStatus, _ := status.FromError(err)
+		gotCode := gotStatus.Code()
+		if test.returnErr {
+			if gotCode != test.wantCode || err.Error() != test.wantErr {
+				t.Errorf("GetUser(%v) got status: %v error: %v want status: %v error: %v", test.name, gotCode, err.Error(), test.wantCode, test.wantErr)
+			}
+		} else if !proto.Equal(test.want, got) {
+			t.Errorf("GetUser(%v) got %v wanted %v", test.name, got, test.want)
+		}
+	}
+}
+
+func TestListTables(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	mockedMongo := &fakeMongo{}
+	fakeDBServer, err := New(ctx, &Config{MongoClient: mockedMongo})
+	if err != nil {
+		t.Fatalf("failed to start a fake MongoDB client")
+	}
+	tests := []struct {
+		name               string
+		want               *dpb.ListTablesResponse
+		pingErr            error
+		listCollectionsErr error
+		returnErr          bool
+		wantCode           codes.Code
+		wantErr            string
+	}{
+		{
+			name: "Success",
+			want: &dpb.ListTablesResponse{
+				Tables: []string{"table1", "table2"},
+			},
+		},
+		{
+			name:      "Failure due to Ping error",
+			returnErr: true,
+			pingErr:   errors.New("returns error"),
+			wantCode:  codes.FailedPrecondition,
+			wantErr:   "rpc error: code = FailedPrecondition desc = failed to connect to MongoDB client: returns error",
+		},
+		{
+			name:               "Failure due to ListColletionNames error",
+			returnErr:          true,
+			listCollectionsErr: errors.New("returns error"),
+			wantCode:           codes.NotFound,
+			wantErr:            fmt.Sprintf("rpc error: code = NotFound desc = could not find tables"),
+		},
+	}
+	for _, test := range tests {
+		mockedMongo.pingErr = test.pingErr
+		mockedMongo.listCollectionsErr = test.listCollectionsErr
+		got, err := fakeDBServer.ListTables(ctx, &dpb.ListTablesRequest{})
 		gotStatus, _ := status.FromError(err)
 		gotCode := gotStatus.Code()
 		if test.returnErr {

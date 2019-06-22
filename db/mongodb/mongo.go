@@ -32,10 +32,19 @@ type MongoDatabase struct {
 // Database satisfies the mongo.Database interface.
 type Database interface {
 	Collection(name string, opts ...*options.CollectionOptions) Collection
+	ListCollectionNames(ctx context.Context, filter interface{}, opts ...*options.ListCollectionsOptions) ([]string, error)
+}
+
+type Cursor struct {
+	bson.Raw
 }
 
 func (d MongoDatabase) Collection(name string, opts ...*options.CollectionOptions) Collection {
 	return &MongoCollection{Collection: d.Database.Collection(name, opts...)}
+}
+
+func (d MongoDatabase) ListCollectionNames(ctx context.Context, filter interface{}, opts ...*options.ListCollectionsOptions) ([]string, error) {
+	return d.Database.ListCollectionNames(ctx, filter, opts...)
 }
 
 type MongoCollection struct {
