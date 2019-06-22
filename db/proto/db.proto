@@ -27,8 +27,27 @@ message ListTablesResponse{
   repeated string tables = 1;
 }
 
+//enum record_type {
+//  DEFAULT = 0;
+//  USER = 1;
+//}
+
+//message AddRecordRequest {
+//  record_type type = 1; 
+//  oneof data {
+//    AddUserRequest add_user_request = 2;
+//  }
+//}
+
+//message AddRecordResponse{
+//  oneof data {
+//    AddUserResponse add_user_response = 2;
+//  }
+//}
+
 // Interface exported by the server.
 service Database {
+  //rpc AddRecord(AddRecordRequest) returns (AddRecordResponse) {}
   rpc AddUser(AddUserRequest) returns (AddUserResponse) {}
   rpc GetUser(GetUserRequest) returns (GetUserResponse) {}
   rpc ListTables(ListTablesRequest) returns (ListTablesResponse) {}

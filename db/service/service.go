@@ -19,9 +19,15 @@ import (
 
 var (
 	// Fatalf var for testing purposes.
-	logFatalf = log.Fatalf
-	db        = "db"
-	usersDB   = "users"
+	logFatalf      = log.Fatalf
+	db             = "db"
+	usersDB        = "users"
+	reservationsDB = "reservations"
+	// dbMap maps record types (proto ENUMs) to table name in mongoDB.
+	dbMap = map[int]string{
+		1: usersDB,
+		2: reservationsDB,
+	}
 )
 
 // singleResults will contain results from FindOne method calls.

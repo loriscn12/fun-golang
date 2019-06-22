@@ -247,7 +247,7 @@ func TestGetUser(t *testing.T) {
 	}
 }
 
-func TestListColletionNames(t *testing.T) {
+func TestListTables(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	mockedMongo := &fakeMongo{}
