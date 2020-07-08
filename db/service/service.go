@@ -102,7 +102,7 @@ func (s *DBService) AddRecord(ctx context.Context, req *dpb.AddRecordRequest) (*
 	if err := s.Client.Ping(ctx, readpref.Primary()); err != nil {
 		return nil, status.Errorf(codes.FailedPrecondition, "failed to connect to MongoDB client: %s", err)
 	}
-	TODO(loriscn12): Add actual logic to determine type or record and add to mongodb accordingly.
+	// TODO(loriscn12): Add actual logic to determine type or record and add to mongodb accordingly.
 	return &dpb.AddRecordResponse{
 		Data: &dpb.AddRecordResponse_AddItemResponse{
 			AddItemResponse: &dpb.AddItemResponse{Id: "1"},
