@@ -22,6 +22,34 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
+type RecordType int32
+
+const (
+	RecordType_DEFAULT RecordType = 0
+	RecordType_USER    RecordType = 1
+	RecordType_ITEM    RecordType = 2
+)
+
+var RecordType_name = map[int32]string{
+	0: "DEFAULT",
+	1: "USER",
+	2: "ITEM",
+}
+
+var RecordType_value = map[string]int32{
+	"DEFAULT": 0,
+	"USER":    1,
+	"ITEM":    2,
+}
+
+func (x RecordType) String() string {
+	return proto.EnumName(RecordType_name, int32(x))
+}
+
+func (RecordType) EnumDescriptor() ([]byte, []int) {
+	return fileDescriptor_903744a76531f483, []int{0}
+}
+
 type GetUserRequest struct {
 	Name                 string   `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	Surname              string   `protobuf:"bytes,2,opt,name=surname,proto3" json:"surname,omitempty"`
@@ -202,28 +230,426 @@ func (m *AddUserResponse) GetId() string {
 	return ""
 }
 
+type Item struct {
+	Name                 string   `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Description          string   `protobuf:"bytes,2,opt,name=description,proto3" json:"description,omitempty"`
+	Price                string   `protobuf:"bytes,3,opt,name=price,proto3" json:"price,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *Item) Reset()         { *m = Item{} }
+func (m *Item) String() string { return proto.CompactTextString(m) }
+func (*Item) ProtoMessage()    {}
+func (*Item) Descriptor() ([]byte, []int) {
+	return fileDescriptor_903744a76531f483, []int{4}
+}
+
+func (m *Item) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_Item.Unmarshal(m, b)
+}
+func (m *Item) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_Item.Marshal(b, m, deterministic)
+}
+func (m *Item) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Item.Merge(m, src)
+}
+func (m *Item) XXX_Size() int {
+	return xxx_messageInfo_Item.Size(m)
+}
+func (m *Item) XXX_DiscardUnknown() {
+	xxx_messageInfo_Item.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_Item proto.InternalMessageInfo
+
+func (m *Item) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+func (m *Item) GetDescription() string {
+	if m != nil {
+		return m.Description
+	}
+	return ""
+}
+
+func (m *Item) GetPrice() string {
+	if m != nil {
+		return m.Price
+	}
+	return ""
+}
+
+type AddItemRequest struct {
+	Item                 *Item    `protobuf:"bytes,1,opt,name=item,proto3" json:"item,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *AddItemRequest) Reset()         { *m = AddItemRequest{} }
+func (m *AddItemRequest) String() string { return proto.CompactTextString(m) }
+func (*AddItemRequest) ProtoMessage()    {}
+func (*AddItemRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_903744a76531f483, []int{5}
+}
+
+func (m *AddItemRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_AddItemRequest.Unmarshal(m, b)
+}
+func (m *AddItemRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_AddItemRequest.Marshal(b, m, deterministic)
+}
+func (m *AddItemRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_AddItemRequest.Merge(m, src)
+}
+func (m *AddItemRequest) XXX_Size() int {
+	return xxx_messageInfo_AddItemRequest.Size(m)
+}
+func (m *AddItemRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_AddItemRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_AddItemRequest proto.InternalMessageInfo
+
+func (m *AddItemRequest) GetItem() *Item {
+	if m != nil {
+		return m.Item
+	}
+	return nil
+}
+
+type AddItemResponse struct {
+	Id                   string   `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *AddItemResponse) Reset()         { *m = AddItemResponse{} }
+func (m *AddItemResponse) String() string { return proto.CompactTextString(m) }
+func (*AddItemResponse) ProtoMessage()    {}
+func (*AddItemResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_903744a76531f483, []int{6}
+}
+
+func (m *AddItemResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_AddItemResponse.Unmarshal(m, b)
+}
+func (m *AddItemResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_AddItemResponse.Marshal(b, m, deterministic)
+}
+func (m *AddItemResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_AddItemResponse.Merge(m, src)
+}
+func (m *AddItemResponse) XXX_Size() int {
+	return xxx_messageInfo_AddItemResponse.Size(m)
+}
+func (m *AddItemResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_AddItemResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_AddItemResponse proto.InternalMessageInfo
+
+func (m *AddItemResponse) GetId() string {
+	if m != nil {
+		return m.Id
+	}
+	return ""
+}
+
+type ListTablesRequest struct {
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *ListTablesRequest) Reset()         { *m = ListTablesRequest{} }
+func (m *ListTablesRequest) String() string { return proto.CompactTextString(m) }
+func (*ListTablesRequest) ProtoMessage()    {}
+func (*ListTablesRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_903744a76531f483, []int{7}
+}
+
+func (m *ListTablesRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ListTablesRequest.Unmarshal(m, b)
+}
+func (m *ListTablesRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ListTablesRequest.Marshal(b, m, deterministic)
+}
+func (m *ListTablesRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ListTablesRequest.Merge(m, src)
+}
+func (m *ListTablesRequest) XXX_Size() int {
+	return xxx_messageInfo_ListTablesRequest.Size(m)
+}
+func (m *ListTablesRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_ListTablesRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ListTablesRequest proto.InternalMessageInfo
+
+type ListTablesResponse struct {
+	Tables               []string `protobuf:"bytes,1,rep,name=tables,proto3" json:"tables,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *ListTablesResponse) Reset()         { *m = ListTablesResponse{} }
+func (m *ListTablesResponse) String() string { return proto.CompactTextString(m) }
+func (*ListTablesResponse) ProtoMessage()    {}
+func (*ListTablesResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_903744a76531f483, []int{8}
+}
+
+func (m *ListTablesResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ListTablesResponse.Unmarshal(m, b)
+}
+func (m *ListTablesResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ListTablesResponse.Marshal(b, m, deterministic)
+}
+func (m *ListTablesResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ListTablesResponse.Merge(m, src)
+}
+func (m *ListTablesResponse) XXX_Size() int {
+	return xxx_messageInfo_ListTablesResponse.Size(m)
+}
+func (m *ListTablesResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_ListTablesResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ListTablesResponse proto.InternalMessageInfo
+
+func (m *ListTablesResponse) GetTables() []string {
+	if m != nil {
+		return m.Tables
+	}
+	return nil
+}
+
+type AddRecordRequest struct {
+	Type RecordType `protobuf:"varint,1,opt,name=type,proto3,enum=db.RecordType" json:"type,omitempty"`
+	// Types that are valid to be assigned to Data:
+	//	*AddRecordRequest_AddUserRequest
+	//	*AddRecordRequest_AddItemRequest
+	Data                 isAddRecordRequest_Data `protobuf_oneof:"data"`
+	XXX_NoUnkeyedLiteral struct{}                `json:"-"`
+	XXX_unrecognized     []byte                  `json:"-"`
+	XXX_sizecache        int32                   `json:"-"`
+}
+
+func (m *AddRecordRequest) Reset()         { *m = AddRecordRequest{} }
+func (m *AddRecordRequest) String() string { return proto.CompactTextString(m) }
+func (*AddRecordRequest) ProtoMessage()    {}
+func (*AddRecordRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_903744a76531f483, []int{9}
+}
+
+func (m *AddRecordRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_AddRecordRequest.Unmarshal(m, b)
+}
+func (m *AddRecordRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_AddRecordRequest.Marshal(b, m, deterministic)
+}
+func (m *AddRecordRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_AddRecordRequest.Merge(m, src)
+}
+func (m *AddRecordRequest) XXX_Size() int {
+	return xxx_messageInfo_AddRecordRequest.Size(m)
+}
+func (m *AddRecordRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_AddRecordRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_AddRecordRequest proto.InternalMessageInfo
+
+func (m *AddRecordRequest) GetType() RecordType {
+	if m != nil {
+		return m.Type
+	}
+	return RecordType_DEFAULT
+}
+
+type isAddRecordRequest_Data interface {
+	isAddRecordRequest_Data()
+}
+
+type AddRecordRequest_AddUserRequest struct {
+	AddUserRequest *AddUserRequest `protobuf:"bytes,2,opt,name=add_user_request,json=addUserRequest,proto3,oneof"`
+}
+
+type AddRecordRequest_AddItemRequest struct {
+	AddItemRequest *AddItemResponse `protobuf:"bytes,3,opt,name=add_item_request,json=addItemRequest,proto3,oneof"`
+}
+
+func (*AddRecordRequest_AddUserRequest) isAddRecordRequest_Data() {}
+
+func (*AddRecordRequest_AddItemRequest) isAddRecordRequest_Data() {}
+
+func (m *AddRecordRequest) GetData() isAddRecordRequest_Data {
+	if m != nil {
+		return m.Data
+	}
+	return nil
+}
+
+func (m *AddRecordRequest) GetAddUserRequest() *AddUserRequest {
+	if x, ok := m.GetData().(*AddRecordRequest_AddUserRequest); ok {
+		return x.AddUserRequest
+	}
+	return nil
+}
+
+func (m *AddRecordRequest) GetAddItemRequest() *AddItemResponse {
+	if x, ok := m.GetData().(*AddRecordRequest_AddItemRequest); ok {
+		return x.AddItemRequest
+	}
+	return nil
+}
+
+// XXX_OneofWrappers is for the internal use of the proto package.
+func (*AddRecordRequest) XXX_OneofWrappers() []interface{} {
+	return []interface{}{
+		(*AddRecordRequest_AddUserRequest)(nil),
+		(*AddRecordRequest_AddItemRequest)(nil),
+	}
+}
+
+type AddRecordResponse struct {
+	// Types that are valid to be assigned to Data:
+	//	*AddRecordResponse_AddUserResponse
+	//	*AddRecordResponse_AddItemResponse
+	Data                 isAddRecordResponse_Data `protobuf_oneof:"data"`
+	XXX_NoUnkeyedLiteral struct{}                 `json:"-"`
+	XXX_unrecognized     []byte                   `json:"-"`
+	XXX_sizecache        int32                    `json:"-"`
+}
+
+func (m *AddRecordResponse) Reset()         { *m = AddRecordResponse{} }
+func (m *AddRecordResponse) String() string { return proto.CompactTextString(m) }
+func (*AddRecordResponse) ProtoMessage()    {}
+func (*AddRecordResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_903744a76531f483, []int{10}
+}
+
+func (m *AddRecordResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_AddRecordResponse.Unmarshal(m, b)
+}
+func (m *AddRecordResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_AddRecordResponse.Marshal(b, m, deterministic)
+}
+func (m *AddRecordResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_AddRecordResponse.Merge(m, src)
+}
+func (m *AddRecordResponse) XXX_Size() int {
+	return xxx_messageInfo_AddRecordResponse.Size(m)
+}
+func (m *AddRecordResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_AddRecordResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_AddRecordResponse proto.InternalMessageInfo
+
+type isAddRecordResponse_Data interface {
+	isAddRecordResponse_Data()
+}
+
+type AddRecordResponse_AddUserResponse struct {
+	AddUserResponse *AddUserResponse `protobuf:"bytes,2,opt,name=add_user_response,json=addUserResponse,proto3,oneof"`
+}
+
+type AddRecordResponse_AddItemResponse struct {
+	AddItemResponse *AddItemResponse `protobuf:"bytes,3,opt,name=add_item_response,json=addItemResponse,proto3,oneof"`
+}
+
+func (*AddRecordResponse_AddUserResponse) isAddRecordResponse_Data() {}
+
+func (*AddRecordResponse_AddItemResponse) isAddRecordResponse_Data() {}
+
+func (m *AddRecordResponse) GetData() isAddRecordResponse_Data {
+	if m != nil {
+		return m.Data
+	}
+	return nil
+}
+
+func (m *AddRecordResponse) GetAddUserResponse() *AddUserResponse {
+	if x, ok := m.GetData().(*AddRecordResponse_AddUserResponse); ok {
+		return x.AddUserResponse
+	}
+	return nil
+}
+
+func (m *AddRecordResponse) GetAddItemResponse() *AddItemResponse {
+	if x, ok := m.GetData().(*AddRecordResponse_AddItemResponse); ok {
+		return x.AddItemResponse
+	}
+	return nil
+}
+
+// XXX_OneofWrappers is for the internal use of the proto package.
+func (*AddRecordResponse) XXX_OneofWrappers() []interface{} {
+	return []interface{}{
+		(*AddRecordResponse_AddUserResponse)(nil),
+		(*AddRecordResponse_AddItemResponse)(nil),
+	}
+}
+
 func init() {
+	proto.RegisterEnum("db.RecordType", RecordType_name, RecordType_value)
 	proto.RegisterType((*GetUserRequest)(nil), "db.GetUserRequest")
 	proto.RegisterType((*GetUserResponse)(nil), "db.GetUserResponse")
 	proto.RegisterType((*AddUserRequest)(nil), "db.AddUserRequest")
 	proto.RegisterType((*AddUserResponse)(nil), "db.AddUserResponse")
+	proto.RegisterType((*Item)(nil), "db.Item")
+	proto.RegisterType((*AddItemRequest)(nil), "db.AddItemRequest")
+	proto.RegisterType((*AddItemResponse)(nil), "db.AddItemResponse")
+	proto.RegisterType((*ListTablesRequest)(nil), "db.ListTablesRequest")
+	proto.RegisterType((*ListTablesResponse)(nil), "db.ListTablesResponse")
+	proto.RegisterType((*AddRecordRequest)(nil), "db.AddRecordRequest")
+	proto.RegisterType((*AddRecordResponse)(nil), "db.AddRecordResponse")
 }
 
 func init() { proto.RegisterFile("proto/db.proto", fileDescriptor_903744a76531f483) }
 
 var fileDescriptor_903744a76531f483 = []byte{
-	// 169 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0x2b, 0x28, 0xca, 0x2f,
-	0xc9, 0xd7, 0x4f, 0x49, 0xd2, 0x03, 0x33, 0x84, 0x98, 0x52, 0x92, 0x94, 0xec, 0xb8, 0xf8, 0xdc,
-	0x53, 0x4b, 0x42, 0x8b, 0x53, 0x8b, 0x82, 0x52, 0x0b, 0x4b, 0x53, 0x8b, 0x4b, 0x84, 0x84, 0xb8,
-	0x58, 0xf2, 0x12, 0x73, 0x53, 0x25, 0x18, 0x15, 0x18, 0x35, 0x38, 0x83, 0xc0, 0x6c, 0x21, 0x09,
-	0x2e, 0xf6, 0xe2, 0xd2, 0x22, 0xb0, 0x30, 0x13, 0x58, 0x18, 0xc6, 0x55, 0xb2, 0xe7, 0xe2, 0x87,
-	0xeb, 0x2f, 0x2e, 0xc8, 0xcf, 0x2b, 0x4e, 0x25, 0xd1, 0x00, 0x3b, 0x2e, 0x3e, 0xc7, 0x94, 0x14,
-	0xf2, 0x1d, 0xa0, 0xc8, 0xc5, 0x0f, 0xd7, 0x0f, 0x75, 0x00, 0x1f, 0x17, 0x53, 0x66, 0x0a, 0x54,
-	0x3b, 0x53, 0x66, 0x8a, 0x91, 0x03, 0x17, 0x87, 0x4b, 0x62, 0x49, 0x62, 0x52, 0x62, 0x71, 0xaa,
-	0x90, 0x09, 0x17, 0x3b, 0x54, 0xb9, 0x90, 0x90, 0x5e, 0x4a, 0x92, 0x1e, 0xaa, 0xdd, 0x52, 0xc2,
-	0x28, 0x62, 0x10, 0xf3, 0x94, 0x18, 0x92, 0xd8, 0xc0, 0x01, 0x66, 0x0c, 0x08, 0x00, 0x00, 0xff,
-	0xff, 0xa3, 0x85, 0x74, 0xb9, 0x42, 0x01, 0x00, 0x00,
+	// 478 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x9c, 0x94, 0xcd, 0x8e, 0xd3, 0x30,
+	0x14, 0x85, 0x9b, 0x34, 0xf4, 0xe7, 0x46, 0x4a, 0x52, 0x77, 0x18, 0x55, 0x15, 0x8b, 0x62, 0x36,
+	0x23, 0x84, 0x82, 0x54, 0x58, 0x21, 0xd1, 0x51, 0xd1, 0x14, 0x18, 0xa9, 0x6c, 0x42, 0xbb, 0xae,
+	0x9c, 0xda, 0x8b, 0x48, 0xb4, 0x09, 0xb6, 0xbb, 0xe0, 0x71, 0x78, 0x13, 0x5e, 0x89, 0x37, 0x40,
+	0xb1, 0x6f, 0x42, 0x52, 0x0a, 0x12, 0xb3, 0xb3, 0x8f, 0x73, 0x8e, 0xbf, 0xeb, 0x6b, 0x07, 0x82,
+	0x42, 0xe6, 0x3a, 0x7f, 0xc9, 0xd3, 0xd8, 0x0c, 0x88, 0xcb, 0x53, 0xba, 0x80, 0xe0, 0x83, 0xd0,
+	0x5b, 0x25, 0x64, 0x22, 0xbe, 0x9e, 0x84, 0xd2, 0x84, 0x80, 0x77, 0x64, 0x07, 0x31, 0x71, 0x66,
+	0xce, 0xcd, 0x30, 0x31, 0x63, 0x32, 0x81, 0xbe, 0x3a, 0x49, 0x23, 0xbb, 0x46, 0xae, 0xa6, 0xf4,
+	0x16, 0xc2, 0xda, 0xaf, 0x8a, 0xfc, 0xa8, 0xc4, 0x7f, 0x06, 0x2c, 0x20, 0x58, 0x72, 0xfe, 0x70,
+	0x80, 0xa7, 0x10, 0xd6, 0x7e, 0x04, 0x08, 0xc0, 0xcd, 0x38, 0xda, 0xdd, 0x8c, 0xd3, 0x04, 0xbc,
+	0x7b, 0x2d, 0x0e, 0x17, 0x83, 0x67, 0xe0, 0x73, 0xa1, 0xf6, 0x32, 0x2b, 0x74, 0x96, 0x1f, 0x31,
+	0xbc, 0x29, 0x91, 0x2b, 0x78, 0x54, 0xc8, 0x6c, 0x2f, 0x26, 0x5d, 0xb3, 0x66, 0x27, 0x34, 0x36,
+	0xd8, 0x65, 0x6c, 0x85, 0xfd, 0x04, 0xbc, 0x4c, 0x8b, 0x83, 0x49, 0xf7, 0xe7, 0x83, 0x98, 0xa7,
+	0xb1, 0x59, 0x36, 0x2a, 0x62, 0xda, 0xef, 0xff, 0x82, 0x39, 0x86, 0xd1, 0x3a, 0x53, 0x7a, 0xc3,
+	0xd2, 0x2f, 0x42, 0x61, 0x2a, 0x7d, 0x01, 0xa4, 0x29, 0xa2, 0xf5, 0x1a, 0x7a, 0xda, 0x28, 0x13,
+	0x67, 0xd6, 0xbd, 0x19, 0x26, 0x38, 0xa3, 0x3f, 0x1c, 0x88, 0x96, 0x9c, 0x27, 0x62, 0x9f, 0x4b,
+	0x5e, 0x81, 0x3d, 0x03, 0x4f, 0x7f, 0x2b, 0x6c, 0xd9, 0xc1, 0x3c, 0x2c, 0xc1, 0xa4, 0xf9, 0x60,
+	0x57, 0xca, 0x89, 0x59, 0x24, 0x0b, 0x88, 0x18, 0xe7, 0xbb, 0x93, 0x12, 0x72, 0x27, 0xad, 0xd1,
+	0x1c, 0x86, 0x3f, 0x27, 0xa5, 0xa1, 0xdd, 0xa2, 0x8f, 0x9d, 0x24, 0x60, 0xed, 0xa6, 0xdd, 0x5a,
+	0x7f, 0x59, 0x6b, 0xed, 0xef, 0x1a, 0xff, 0x18, 0xfd, 0xcd, 0xda, 0x31, 0xa0, 0x71, 0x7c, 0xef,
+	0x7a, 0xe0, 0x71, 0xa6, 0x19, 0xfd, 0xee, 0xc0, 0xa8, 0x51, 0x02, 0x16, 0xbc, 0x84, 0x51, 0x03,
+	0xcf, 0x8a, 0xc8, 0x37, 0x6e, 0xf1, 0xd5, 0xf9, 0x21, 0x3b, 0xbb, 0x15, 0x18, 0x81, 0x84, 0x18,
+	0xf1, 0x4f, 0xc4, 0x90, 0xb5, 0xa5, 0x8a, 0xf1, 0x79, 0x0c, 0x7e, 0xe3, 0x04, 0x89, 0x0f, 0xfd,
+	0xbb, 0xd5, 0xfb, 0xe5, 0x76, 0xbd, 0x89, 0x3a, 0x64, 0x00, 0xde, 0xf6, 0xf3, 0x2a, 0x89, 0x9c,
+	0x72, 0x74, 0xbf, 0x59, 0x7d, 0x8a, 0xdc, 0xf9, 0x4f, 0x07, 0x06, 0x77, 0x4c, 0xb3, 0x94, 0x29,
+	0x41, 0xde, 0xc0, 0xb0, 0xae, 0x8f, 0x5c, 0xe1, 0xce, 0xad, 0x8e, 0x4d, 0x1f, 0x9f, 0xa9, 0x76,
+	0x7b, 0xda, 0x21, 0xaf, 0xa1, 0x8f, 0x95, 0x92, 0x0b, 0x6d, 0x99, 0x5e, 0x3a, 0x0a, 0xeb, 0xc2,
+	0x37, 0x6a, 0x5d, 0xed, 0x07, 0x6f, 0x5d, 0x67, 0x8f, 0x98, 0x76, 0xc8, 0x5b, 0x80, 0xdf, 0x37,
+	0x8f, 0x18, 0xa4, 0x3f, 0xae, 0xe7, 0xf4, 0xfa, 0x5c, 0xae, 0xec, 0x69, 0xcf, 0xfc, 0x63, 0x5e,
+	0xfd, 0x0a, 0x00, 0x00, 0xff, 0xff, 0xc8, 0x2b, 0xe0, 0xf9, 0x75, 0x04, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -238,7 +664,10 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type DatabaseClient interface {
+	AddRecord(ctx context.Context, in *AddRecordRequest, opts ...grpc.CallOption) (*AddRecordResponse, error)
 	AddUser(ctx context.Context, in *AddUserRequest, opts ...grpc.CallOption) (*AddUserResponse, error)
+	GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*GetUserResponse, error)
+	ListTables(ctx context.Context, in *ListTablesRequest, opts ...grpc.CallOption) (*ListTablesResponse, error)
 }
 
 type databaseClient struct {
@@ -247,6 +676,15 @@ type databaseClient struct {
 
 func NewDatabaseClient(cc *grpc.ClientConn) DatabaseClient {
 	return &databaseClient{cc}
+}
+
+func (c *databaseClient) AddRecord(ctx context.Context, in *AddRecordRequest, opts ...grpc.CallOption) (*AddRecordResponse, error) {
+	out := new(AddRecordResponse)
+	err := c.cc.Invoke(ctx, "/db.Database/AddRecord", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *databaseClient) AddUser(ctx context.Context, in *AddUserRequest, opts ...grpc.CallOption) (*AddUserResponse, error) {
@@ -258,13 +696,52 @@ func (c *databaseClient) AddUser(ctx context.Context, in *AddUserRequest, opts .
 	return out, nil
 }
 
+func (c *databaseClient) GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*GetUserResponse, error) {
+	out := new(GetUserResponse)
+	err := c.cc.Invoke(ctx, "/db.Database/GetUser", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *databaseClient) ListTables(ctx context.Context, in *ListTablesRequest, opts ...grpc.CallOption) (*ListTablesResponse, error) {
+	out := new(ListTablesResponse)
+	err := c.cc.Invoke(ctx, "/db.Database/ListTables", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // DatabaseServer is the server API for Database service.
 type DatabaseServer interface {
+	AddRecord(context.Context, *AddRecordRequest) (*AddRecordResponse, error)
 	AddUser(context.Context, *AddUserRequest) (*AddUserResponse, error)
+	GetUser(context.Context, *GetUserRequest) (*GetUserResponse, error)
+	ListTables(context.Context, *ListTablesRequest) (*ListTablesResponse, error)
 }
 
 func RegisterDatabaseServer(s *grpc.Server, srv DatabaseServer) {
 	s.RegisterService(&_Database_serviceDesc, srv)
+}
+
+func _Database_AddRecord_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddRecordRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DatabaseServer).AddRecord(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/db.Database/AddRecord",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DatabaseServer).AddRecord(ctx, req.(*AddRecordRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _Database_AddUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -285,13 +762,61 @@ func _Database_AddUser_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Database_GetUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DatabaseServer).GetUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/db.Database/GetUser",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DatabaseServer).GetUser(ctx, req.(*GetUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Database_ListTables_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListTablesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DatabaseServer).ListTables(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/db.Database/ListTables",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DatabaseServer).ListTables(ctx, req.(*ListTablesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _Database_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "db.Database",
 	HandlerType: (*DatabaseServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
+			MethodName: "AddRecord",
+			Handler:    _Database_AddRecord_Handler,
+		},
+		{
 			MethodName: "AddUser",
 			Handler:    _Database_AddUser_Handler,
+		},
+		{
+			MethodName: "GetUser",
+			Handler:    _Database_GetUser_Handler,
+		},
+		{
+			MethodName: "ListTables",
+			Handler:    _Database_ListTables_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

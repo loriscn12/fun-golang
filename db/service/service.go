@@ -96,3 +96,15 @@ func (s *DBService) ListTables(ctx context.Context, req *dpb.ListTablesRequest) 
 	}
 	return &dpb.ListTablesResponse{}, status.Errorf(codes.NotFound, "could not find tables")
 }
+
+// AddRecord returns a AddRecord response.
+func (s *DBService) AddRecord(ctx context.Context, req *dpb.AddRecordRequest) (*dpb.AddRecordResponse, error) {
+	if err := s.Client.Ping(ctx, readpref.Primary()); err != nil {
+		return nil, status.Errorf(codes.FailedPrecondition, "failed to connect to MongoDB client: %s", err)
+	}
+	return &dpb.AddRecordResponse{
+		Data: &dpb.AddRecordResponse_AddItemResponse{
+			AddItemResponse: &dpb.AddItemResponse{Id: "1"},
+		},
+	}, nil
+}

@@ -21,33 +21,49 @@ message AddUserResponse {
   string id =1;
 }
 
+message Item {
+  string name = 1;
+  string description = 2;
+  string price = 3;
+}
+message AddItemRequest {
+  Item item = 1;
+}
+
+message AddItemResponse {
+  string id = 1;
+}
+
 message ListTablesRequest{}
 
 message ListTablesResponse{
   repeated string tables = 1;
 }
 
-//enum record_type {
-//  DEFAULT = 0;
-//  USER = 1;
-//}
+enum record_type {
+  DEFAULT = 0;
+  USER = 1;
+  ITEM = 2;
+}
 
-//message AddRecordRequest {
-//  record_type type = 1; 
-//  oneof data {
-//    AddUserRequest add_user_request = 2;
-//  }
-//}
+message AddRecordRequest {
+  record_type type = 1; 
+  oneof data {
+    AddUserRequest add_user_request = 2;
+    AddItemResponse add_item_request = 3;
+  }
+}
 
-//message AddRecordResponse{
-//  oneof data {
-//    AddUserResponse add_user_response = 2;
-//  }
-//}
+message AddRecordResponse{
+  oneof data {
+    AddUserResponse add_user_response = 2;
+    AddItemResponse add_item_response = 3;
+  }
+}
 
 // Interface exported by the server.
 service Database {
-  //rpc AddRecord(AddRecordRequest) returns (AddRecordResponse) {}
+  rpc AddRecord(AddRecordRequest) returns (AddRecordResponse) {}
   rpc AddUser(AddUserRequest) returns (AddUserResponse) {}
   rpc GetUser(GetUserRequest) returns (GetUserResponse) {}
   rpc ListTables(ListTablesRequest) returns (ListTablesResponse) {}
